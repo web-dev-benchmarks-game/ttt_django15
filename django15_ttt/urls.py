@@ -9,7 +9,7 @@ urlpatterns = patterns(
     # Examples:
     # url(r'^$', 'django15_ttt.views.home', name='home'),
     # url(r'^django15_ttt/', include('django15_ttt.foo.urls')),
-    url(r'^tictactoe/', include('tictactoe.urls')),
+    url(r'^tictactoe/', include('tictactoe.urls', namespace='tictactoe')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
