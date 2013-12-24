@@ -25,3 +25,8 @@ class TicTacToeGame(models.Model):
             board[s.y][s.x] = s.value
 
         return board
+
+    def get_next_player(self):
+        if self.next_player == 0:
+            return self.player_1
+        return self.player_2
