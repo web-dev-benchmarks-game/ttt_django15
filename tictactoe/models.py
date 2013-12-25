@@ -67,6 +67,8 @@ class TicTacToeGame(models.Model):
 
     def move(self, user, x, y):
         assert self.get_next_player() == user
+        if self.is_over():
+            raise self.InvalidMove("This game is already over.")
         if self.spaces.filter(x=x, y=y):
             raise self.InvalidMove("This space is already full.")
         self.spaces.create(x=x, y=y, value=self.next_player_symbol())
