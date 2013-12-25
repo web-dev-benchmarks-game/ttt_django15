@@ -2,4 +2,24 @@
 <h2>
   Between {{ game.player_1 }} (X) and {{ game.player_2 }} (O)
 </h2>
-<h3>{{ game.get_next_player }} to play</h3>
+<h3>{{ game.get_next_player }} ({{ game.next_player_symbol }}) to play</h3>
+
+<form action="{% url 'tictactoe:move' game.id %}" method="post">
+  {% csrf_token %}
+  <table>
+    {% for row in game.board %}
+      <tr>
+        {% for space in row %}
+          <td>
+          {% if space.value %}
+            {{ space.value }}
+          {% else %}
+            <input type="checkbox" name="space" value="{{ space.x }},{{ space.y }}"/>
+          {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+  <input type="submit">
+</form>

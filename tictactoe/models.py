@@ -11,6 +11,8 @@ class TicTacToeSpace(models.Model):
     def __str__(self):
         return "({0}, {1}): {2}".format(self.x, self.y, self.value)
 
+PLAYER_X = 1
+PLAYER_Y = 2
 class TicTacToeGame(models.Model):
     next_player = models.SmallIntegerField() # expecting just 1 and 2
     player_1 = models.ForeignKey(User, related_name='+')
@@ -22,11 +24,20 @@ class TicTacToeGame(models.Model):
         board = [[None, None, None], [None, None, None], [None, None, None]]
         spaces = self.spaces.all()
         for s in spaces:
-            board[s.y][s.x] = s.value
+            board[s.y][s.x] = s
+        for y, row in enumerate(board):
+            for x, cell in enumerate(row):
+                if not cell:
+                    row[x] = TicTacToeSpace(x=x, y=y)
 
         return board
 
     def get_next_player(self):
-        if self.next_player == 0:
+        if self.next_player == PLAYER_X:
             return self.player_1
         return self.player_2
+
+    def next_player_symbol(self):
+        if self.next_player == PLAYER_X:
+            return 'X'
+        return 'O'
