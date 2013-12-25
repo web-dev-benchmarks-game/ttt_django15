@@ -25,6 +25,19 @@ class TicTacToeGame(models.Model):
     class InvalidMove(Exception):
         pass
 
+    def __unicode__(self):
+        if self.is_over():
+            if self.is_tied():
+                status = 'over: tied'
+            else:
+                status = 'won by {}'.format(self.winner())
+        else:
+            status = '{} ({}) to move'.format(self.get_next_player(),
+                                              self.next_player_symbol())
+        return "{} between {} ({}) and {} ({}) ({})".format(
+            self.id, self.player_1, SYMBOL_X, self.player_2, SYMBOL_Y,
+            status)
+
     def board(self):
         board = [[None, None, None], [None, None, None], [None, None, None]]
         spaces = self.spaces.all()
@@ -68,8 +81,6 @@ class TicTacToeGame(models.Model):
 
     class TiedGame(object):
         """Singleton to indicate that a game is tied."""
-        def is_tie(self):
-            return True
 
     def winner(self):
         """Return the player that won, or TiedGame, or None."""
@@ -100,7 +111,10 @@ class TicTacToeGame(models.Model):
                     # Empty space -- the game can continue
                     return None
 
-        return TiedGame
+        return self.TiedGame
 
     def is_over(self):
         return bool(self.winner())
+
+    def is_tied(self):
+        return isinstance(self.winner, self.TiedGame)
