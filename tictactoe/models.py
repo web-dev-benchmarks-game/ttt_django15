@@ -13,6 +13,8 @@ class TicTacToeSpace(models.Model):
 
 PLAYER_X = 1
 PLAYER_Y = 2
+SYMBOL_X = 'X'
+SYMBOL_Y = 'O'
 class TicTacToeGame(models.Model):
     next_player = models.SmallIntegerField(default=1) # expecting just 1 and 2
     player_1 = models.ForeignKey(User, related_name='+')
@@ -42,8 +44,8 @@ class TicTacToeGame(models.Model):
 
     def next_player_symbol(self):
         if self.next_player == PLAYER_X:
-            return 'X'
-        return 'O'
+            return SYMBOL_X
+        return SYMBOL_Y
 
     def move(self, user, x, y):
         assert self.get_next_player() == user
@@ -55,8 +57,50 @@ class TicTacToeGame(models.Model):
         else:
             self.next_player = PLAYER_X
 
-    def is_over(self):
-        return True
+    def symbol_to_player(self, symbol):
+        if symbol == SYMBOL_X:
+            return self.player_1
+        if symbol == SYMBOL_Y:
+            return self.player_2
+        raise ValueError(
+            "symbol {} does not correspond to either player".format(
+                symbol))
+
+    class TiedGame(object):
+        """Singleton to indicate that a game is tied."""
+        def is_tie(self):
+            return True
 
     def winner(self):
-        pass
+        """Return the player that won, or TiedGame, or None."""
+        board = self.board()
+        def cells_have_same_player(c1, c2, c3):
+            return c1.value and c1.value == c2.value == c3.value
+
+        def check_winner(c1, c2, c3):
+            if cells_have_same_player(c1, c2, c3):
+                return self.symbol_to_player(c1.value)
+            return None
+
+        winner = None
+        for row in board:
+            winner = winner or check_winner(*row)
+
+        for i in range(len(board[0])):
+            winner = winner or check_winner(board[0][i], board[1][i], board[2][i])
+
+        winner = winner or check_winner(board[0][0], board[1][1], board[2][2])
+        winner = winner or check_winner(board[0][2], board[1][1], board[2][0])
+        if winner:
+            return winner
+
+        for row in board:
+            for cell in row:
+                if not cell.value:
+                    # Empty space -- the game can continue
+                    return None
+
+        return TiedGame
+
+    def is_over(self):
+        return bool(self.winner())
