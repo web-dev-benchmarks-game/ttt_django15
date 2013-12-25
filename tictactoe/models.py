@@ -26,6 +26,13 @@ class TicTacToeGame(models.Model):
         pass
 
     def __unicode__(self):
+        status = self.status()
+        return "{} between {} ({}) and {} ({}) ({})".format(
+            self.id, self.player_1, SYMBOL_X, self.player_2, SYMBOL_Y,
+            status)
+
+    def status(self):
+        """Return a human-readable status for a game."""
         if self.is_over():
             if self.is_tied():
                 status = 'over: tied'
@@ -34,9 +41,7 @@ class TicTacToeGame(models.Model):
         else:
             status = '{} ({}) to move'.format(self.get_next_player(),
                                               self.next_player_symbol())
-        return "{} between {} ({}) and {} ({}) ({})".format(
-            self.id, self.player_1, SYMBOL_X, self.player_2, SYMBOL_Y,
-            status)
+        return status
 
     def board(self):
         board = [[None, None, None], [None, None, None], [None, None, None]]
