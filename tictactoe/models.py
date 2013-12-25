@@ -20,6 +20,9 @@ class TicTacToeGame(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    class InvalidMove(Exception):
+        pass
+
     def board(self):
         board = [[None, None, None], [None, None, None], [None, None, None]]
         spaces = self.spaces.all()
@@ -41,3 +44,14 @@ class TicTacToeGame(models.Model):
         if self.next_player == PLAYER_X:
             return 'X'
         return 'O'
+
+    def move(self, user, x, y):
+        assert self.get_next_player() == user
+        print self.spaces.filter(x=x, y=y)
+        if self.spaces.filter(x=x, y=y):
+            raise self.InvalidMove("This space is already full.")
+        self.spaces.create(x=x, y=y, value=self.next_player_symbol())
+        if self.next_player == PLAYER_X:
+            self.next_player = PLAYER_Y
+        else:
+            self.next_player = PLAYER_X

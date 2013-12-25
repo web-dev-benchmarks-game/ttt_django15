@@ -1,4 +1,5 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from tictactoe.models import TicTacToeGame
 
@@ -13,4 +14,15 @@ def detail(request, game_id):
     return render(request, 'tictactoe/detail.html', {'game': game})
 
 def move(request, game_id):
-    return HttpResponse("You're making a move on game {}.".format(game_id))
+    game = get_object_or_404(TicTacToeGame, pk=game_id)
+    try:
+        x, y = request.POST['space'].split(',')
+        game.move(request.user, x, y)
+    except TicTacToeGame.InvalidMove as e:
+        return render(request, 'tictactoe/detail.html', {
+            'game': game,
+            'error_message': str(e),
+        })
+
+    game.save()
+    return HttpResponseRedirect(reverse('tictactoe:detail', args=(game.id,)))
