@@ -31,3 +31,36 @@ class TicTacToeTest(TestCase):
         game.move(self.player_1, x=2, y=0)
         self.assert_(game.is_over())
         self.assertEqual(game.winner(), self.player_1)
+
+    def test_detect_ties(self):
+        game = Game.objects.create(player_1=self.player_1,
+                                   player_2=self.player_2)
+        # A complicated match
+        game.move(self.player_1, x=0, y=0)
+        game.move(self.player_2, x=0, y=1)
+        # X - -
+        # O - -
+        # - - -
+
+        game.move(self.player_1, x=1, y=0)
+        game.move(self.player_2, x=2, y=0)
+        # X X O
+        # O - -
+        # - - -
+
+        game.move(self.player_1, x=1, y=1)
+        game.move(self.player_2, x=2, y=2)
+        # X X O
+        # O X -
+        # - - O
+
+        game.move(self.player_1, x=2, y=1)
+        game.move(self.player_2, x=1, y=2)
+        # X X O
+        # O X X
+        # X O O
+
+        game.move(self.player_1, x=0, y=2)
+
+        self.assert_(game.is_over())
+        self.assert_(game.is_tied())

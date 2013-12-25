@@ -124,4 +124,4 @@ class TicTacToeGame(models.Model):
         return bool(self.winner())
 
     def is_tied(self):
-        return isinstance(self.winner, self.TiedGame)
+        return self.winner() == self.TiedGame
