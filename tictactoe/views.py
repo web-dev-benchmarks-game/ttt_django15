@@ -1,17 +1,21 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
+from django.views import generic
+
 from tictactoe.models import TicTacToeGame
 
-def index(request):
-    latest_game_list = TicTacToeGame.objects.order_by('-updated')[:5]
-    return render(request, 'tictactoe/index.html', {
-        'latest_game_list': latest_game_list,
-    })
+class IndexView(generic.ListView):
+    template_name = 'tictactoe/index.html'
+    context_object_name = 'latest_game_list'
 
-def detail(request, game_id):
-    game = get_object_or_404(TicTacToeGame, pk=game_id)
-    return render(request, 'tictactoe/detail.html', {'game': game})
+    def get_queryset(self):
+        return TicTacToeGame.objects.order_by('-updated')[:5]
+
+class DetailView(generic.DetailView):
+    model = TicTacToeGame
+    template_name = 'tictactoe/detail.html'
+    context_object_name = 'game'
 
 def move(request, game_id):
     game = get_object_or_404(TicTacToeGame, pk=game_id)
