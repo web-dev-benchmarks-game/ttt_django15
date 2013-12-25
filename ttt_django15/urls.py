@@ -8,8 +8,8 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     # Examples:
-    # url(r'^$', 'django15_ttt.views.home', name='home'),
-    # url(r'^django15_ttt/', include('django15_ttt.foo.urls')),
+    # url(r'^$', 'ttt_django15.views.home', name='home'),
+    # url(r'^ttt_django15/', include('ttt_django15.foo.urls')),
     url(r'^tictactoe/', include('tictactoe.urls', namespace='tictactoe')),
     url(r'^user/', include('django.contrib.auth.urls', namespace='user')),
     url('^$', RedirectView.as_view(url='tictactoe/')),

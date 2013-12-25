@@ -1,4 +1,4 @@
-# Django settings for django15_ttt project.
+# Django settings for ttt_django15 project.
 import os.path
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -105,10 +105,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'django15_ttt.urls'
+ROOT_URLCONF = 'ttt_django15.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'django15_ttt.wsgi.application'
+WSGI_APPLICATION = 'ttt_django15.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
