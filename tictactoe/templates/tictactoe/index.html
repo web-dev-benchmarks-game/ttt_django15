@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
 {% if latest_game_list %}
   <ul>
     {% for game in latest_game_list %}
@@ -9,3 +12,4 @@
 {% else %}
   <p>No games are available.</p>
 {% endif %}
+{% endblock %}
