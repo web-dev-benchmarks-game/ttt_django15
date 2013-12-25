@@ -14,7 +14,7 @@ class TicTacToeSpace(models.Model):
 PLAYER_X = 1
 PLAYER_Y = 2
 class TicTacToeGame(models.Model):
-    next_player = models.SmallIntegerField() # expecting just 1 and 2
+    next_player = models.SmallIntegerField(default=1) # expecting just 1 and 2
     player_1 = models.ForeignKey(User, related_name='+')
     player_2 = models.ForeignKey(User, related_name='+')
     updated = models.DateTimeField(auto_now=True)
@@ -47,7 +47,6 @@ class TicTacToeGame(models.Model):
 
     def move(self, user, x, y):
         assert self.get_next_player() == user
-        print self.spaces.filter(x=x, y=y)
         if self.spaces.filter(x=x, y=y):
             raise self.InvalidMove("This space is already full.")
         self.spaces.create(x=x, y=y, value=self.next_player_symbol())
@@ -55,3 +54,9 @@ class TicTacToeGame(models.Model):
             self.next_player = PLAYER_Y
         else:
             self.next_player = PLAYER_X
+
+    def is_over(self):
+        return True
+
+    def winner(self):
+        pass
