@@ -3,6 +3,14 @@
     <title>Tic Tac Toe benchmark - Django 1.5</title>
   </head>
   <body>
+    <!-- I know this is lazy, but I don't care too much about how static stuff works in different frameworks -->
+    <div style="float: right;">
+      {% if request.user.is_anonymous %}
+      <a href="{% url 'user:login' %}">login</a>
+      {% else %}
+      Hi {{ request.user }} (<a href="{% url 'user:logout' %}">logout</a>)
+      {% endif %}
+    </div>
     <h1>Tic Tac Toe benchmark - Django 1.5</h1>
 
     {% block content %}

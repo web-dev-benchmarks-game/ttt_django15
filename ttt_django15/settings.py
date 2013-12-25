@@ -1,5 +1,6 @@
 # Django settings for ttt_django15 project.
 import os.path
+import django.conf.global_settings as DEFAULT_SETTINGS
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
@@ -163,3 +164,7 @@ LOGGING = {
         },
     }
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',
+)
