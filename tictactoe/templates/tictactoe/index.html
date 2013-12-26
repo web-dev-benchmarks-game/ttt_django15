@@ -1,16 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if latest_game_list %}
-  <ul>
-    {% for game in latest_game_list %}
-    <li>
-      <a href="{% url 'tictactoe:detail' game.id %}">Game {{ game }}</a>
-    </li>
-    {% endfor %}
-  </ul>
-{% else %}
+{% include "tictactoe/game_list.html" with game_list=my_turn_games title="Your turn" %}
+<a href="{% url 'tictactoe:create' %}">Start a new game</a>
+{% include "tictactoe/game_list.html" with game_list=my_games title="All your games" %}
+{% include "tictactoe/game_list.html" with game_list=latest_game_list title="Latest games" %}
+
+{% if not my_turn_games and not my_games and not latest_game_list %}
   <p>No games are available.</p>
 {% endif %}
-  <a href="{% url 'tictactoe:create' %}">Start a new game</a>
 {% endblock %}

@@ -9,6 +9,18 @@ class IndexView(generic.ListView):
     template_name = 'tictactoe/index.html'
     context_object_name = 'latest_game_list'
 
+    def get_my_turn_games(self):
+        return TicTacToeGame.objects.user_to_play(self.request.user).order_by('-updated')
+
+    def get_my_games(self):
+        return TicTacToeGame.objects.for_user(self.request.user).order_by('-updated')
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['my_turn_games'] = self.get_my_turn_games()
+        context['my_games'] = self.get_my_games()
+        return context
+
     def get_queryset(self):
         return TicTacToeGame.objects.order_by('-updated')[:5]
 

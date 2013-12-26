@@ -1,0 +1,16 @@
+{% comment %}
+ % Subtemplate for rendering a list of games.
+ %
+ % :param game_list: the list of games to render
+ % :param title: the title of the list of games, if any games are present
+{% endcomment %}
+{% if game_list %}
+<h3>{{ title }}</h3>
+<ul>
+  {% for game in game_list %}
+  <li>
+    <a href="{% url 'tictactoe:detail' game.id %}">Game {{ game }}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
