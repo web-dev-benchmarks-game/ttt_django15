@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic.base import RedirectView
+from simplereg import views as simplereg
 
 from django.contrib import admin
 admin.autodiscover()
@@ -11,8 +12,9 @@ urlpatterns = patterns(
     # url(r'^$', 'ttt_django15.views.home', name='home'),
     # url(r'^ttt_django15/', include('ttt_django15.foo.urls')),
     url(r'^tictactoe/', include('tictactoe.urls', namespace='tictactoe')),
+    url(r'^user/register$', simplereg.RegisterView.as_view(), name='register'),
     url(r'^user/', include('django.contrib.auth.urls', namespace='user')),
-    url('^$', RedirectView.as_view(url='tictactoe/')),
+    url('^$', RedirectView.as_view(url='tictactoe/'), name='home'),
 
 
     # Uncomment the admin/doc line below to enable admin documentation:

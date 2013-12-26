@@ -7,6 +7,7 @@
     <div style="float: right;">
       {% if request.user.is_anonymous %}
       <a href="{% url 'user:login' %}">login</a>
+      <a href="{% url 'register' %}">register</a>
       {% else %}
       Hi {{ request.user }} (<a href="{% url 'user:logout' %}">logout</a>)
       {% endif %}
