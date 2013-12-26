@@ -30,3 +30,7 @@ def move(request, game_id):
 
     game.save()
     return HttpResponseRedirect(reverse('tictactoe:detail', args=(game.id,)))
+
+class CreateGame(generic.edit.CreateView):
+    model = TicTacToeGame
+    template_name = 'tictactoe/create.html'

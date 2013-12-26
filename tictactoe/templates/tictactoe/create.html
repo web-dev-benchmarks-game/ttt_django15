@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Start a new game</h2>
+
+<form method="POST">
+  {% csrf_token %}
+  <p>
+    <label for="id_player_1">
+      Playing X:
+    </label>
+    <select id="id_player_1" name="player_1">
+      <option selected="selected" value="{{ request.user.id }}">me</option>
+      {% for user_id, user in form.player_1.field.choices %}
+        {% if user_id != request.user.id %}
+          <option value="{{ user_id }}">{{ user }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </p>
+  <p>
+    <label for="id_player_2">
+      Playing O:
+    </label>
+    <select id="id_player_2" name="player_2">
+      <option value="{{ request.user.id }}">me</option>
+      {% for user_id, user in form.player_2.field.choices %}
+        {% if user_id != request.user.id %}
+          <option value="{{ user_id }}" {% if not user_id %}selected="selected"{% endif %}>
+            {{ user }}
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </p>
+
+  <p>
+    <select id="id_next_player" name="next_player">
+      <option value="1">X</option>
+      <option value="2">O</option>
+    </select>
+    <label for="id_next_player">
+      to start
+    </label>
+  </p>
+  <input type="submit"/>
+</form>
+{% endblock %}

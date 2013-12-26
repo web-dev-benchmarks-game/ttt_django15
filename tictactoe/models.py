@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 class TicTacToeSpace(models.Model):
@@ -127,3 +128,6 @@ class TicTacToeGame(models.Model):
 
     def is_tied(self):
         return self.winner() == self.TiedGame
+
+    def get_absolute_url(self):
+        return reverse('tictactoe:detail', kwargs={'pk':self.id})
