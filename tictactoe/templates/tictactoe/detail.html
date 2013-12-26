@@ -20,8 +20,10 @@
           <td>
           {% if space.value %}
             {{ space.value }}
-          {% else %}
+          {% elif game.get_next_player == request.user %}
             <input type="checkbox" name="space" value="{{ space.x }},{{ space.y }}"/>
+          {% else %}
+            _
           {% endif %}
           </td>
         {% endfor %}

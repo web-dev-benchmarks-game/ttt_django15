@@ -56,6 +56,8 @@ class TicTacToeGame(models.Model):
         return board
 
     def get_next_player(self):
+        if self.is_over():
+            return None
         if self.next_player == PLAYER_X:
             return self.player_1
         return self.player_2
