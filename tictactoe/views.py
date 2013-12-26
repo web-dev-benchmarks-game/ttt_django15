@@ -17,8 +17,9 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['my_turn_games'] = self.get_my_turn_games()
-        context['my_games'] = self.get_my_games()
+        if self.request.user.is_authenticated():
+            context['my_turn_games'] = self.get_my_turn_games()
+            context['my_games'] = self.get_my_games()
         return context
 
     def get_queryset(self):

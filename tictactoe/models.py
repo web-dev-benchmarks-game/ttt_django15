@@ -29,7 +29,8 @@ PLAYER_Y = 2
 SYMBOL_X = 'X'
 SYMBOL_Y = 'O'
 class TicTacToeGame(models.Model):
-    next_player = models.SmallIntegerField(default=1) # expecting just 1 and 2
+    # expecting just 1 and 2; 0 means game over
+    next_player = models.SmallIntegerField(default=1)
     player_1 = models.ForeignKey(User, related_name='+')
     player_2 = models.ForeignKey(User, related_name='+')
     updated = models.DateTimeField(auto_now=True)
@@ -88,7 +89,9 @@ class TicTacToeGame(models.Model):
         if self.spaces.filter(x=x, y=y):
             raise self.InvalidMove("This space is already full.")
         self.spaces.create(x=x, y=y, value=self.next_player_symbol())
-        if self.next_player == PLAYER_X:
+        if self.is_over():
+            self.next_player = 0
+        elif self.next_player == PLAYER_X:
             self.next_player = PLAYER_Y
         else:
             self.next_player = PLAYER_X
