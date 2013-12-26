@@ -1,4 +1,6 @@
+from model_utils.managers import PassThroughManager
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
@@ -12,6 +14,16 @@ class TicTacToeSpace(models.Model):
     def __str__(self):
         return "({0}, {1}): {2}".format(self.x, self.y, self.value)
 
+class TicTacToeGameQuerySet(models.query.QuerySet):
+    """Provides domain-specific queries for TTT games."""
+    def for_user(self, user):
+        return self.filter(Q(player_1=user) | Q(player_2=user))
+
+    def user_to_play(self, user):
+        player_1_to_play = Q(player_1=user) & Q(next_player=1)
+        player_2_to_play = Q(player_2=user) & Q(next_player=2)
+        return self.filter(player_1_to_play | player_2_to_play)
+
 PLAYER_X = 1
 PLAYER_Y = 2
 SYMBOL_X = 'X'
@@ -22,6 +34,7 @@ class TicTacToeGame(models.Model):
     player_2 = models.ForeignKey(User, related_name='+')
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    objects = PassThroughManager.for_queryset_class(TicTacToeGameQuerySet)()
 
     class InvalidMove(Exception):
         pass

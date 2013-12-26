@@ -9,11 +9,12 @@ from django.test import TestCase
 from tictactoe.models import TicTacToeGame as Game, TicTacToeSpace as Space
 from django.contrib.auth.models import User
 
-class TicTacToeTest(TestCase):
+class TicTacToeBase(TestCase):
     def setUp(self):
         self.player_1 = User.objects.create(username='player_1')
         self.player_2 = User.objects.create(username='player_2')
 
+class TicTacToeTest(TicTacToeBase):
     def test_basic_game_starts_not_over(self):
         """filling in the first row means game over"""
         game = Game(player_1=self.player_1,
@@ -64,3 +65,30 @@ class TicTacToeTest(TestCase):
 
         self.assert_(game.is_over())
         self.assert_(game.is_tied())
+
+class TicTacToeManagerTest(TicTacToeBase):
+    def test_for_player_1(self):
+        game = Game.objects.create(player_1=self.player_1, player_2=self.player_2)
+        self.assertEqual(list(Game.objects.for_user(self.player_1)),
+                         [game])
+
+    def test_for_player_2(self):
+        game = Game.objects.create(player_1=self.player_1, player_2=self.player_2)
+        self.assertEqual(list(Game.objects.for_user(self.player_2)),
+                         [game])
+
+    def test_user_to_play_player_1(self):
+        game = Game.objects.create(player_1=self.player_1, player_2=self.player_2,
+                                   next_player=1)
+        self.assertEqual(list(Game.objects.user_to_play(self.player_1)),
+                         [game])
+        self.assertEqual(list(Game.objects.user_to_play(self.player_2)),
+                         [])
+
+    def test_user_to_play_player_1(self):
+        game = Game.objects.create(player_1=self.player_1, player_2=self.player_2,
+                                   next_player=2)
+        self.assertEqual(list(Game.objects.user_to_play(self.player_2)),
+                         [game])
+        self.assertEqual(list(Game.objects.user_to_play(self.player_1)),
+                         [])
